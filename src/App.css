@@ -1,0 +1,13 @@
+.arco-tabs-content {
+  padding-top: 0;
+  height: 100%;
+}
+
+.arco-tabs-content .arco-tabs-content-item.arco-tabs-content-item-active {
+  height: calc(100vh - 9rem);
+  overflow: auto;
+}
+
+.progress:hover .hanlder {
+  visibility: visible;
+}
