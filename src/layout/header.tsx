@@ -1,5 +1,6 @@
 import { login } from "@/apis";
 import useUserStore from "@/store/user";
+import { getStore } from "@/utils/store";
 import {
   Button,
   Checkbox,
@@ -13,15 +14,14 @@ import {
   Space,
 } from "@arco-design/web-react";
 import { IconUser } from "@arco-design/web-react/icon";
+import { useAsyncEffect } from "ahooks";
 import { useState } from "react";
-
+type Mode = "手机号登录" | "邮箱登录" | "扫码登录" | "验证码登录";
 function Header() {
   const { isAnonimous, setCookie, setUserInfo, setIsAnonimous, userInfo } =
     useUserStore();
   const [loginModal, setLoginModal] = useState(false);
-  const [mode, setMode] = useState<
-    "手机号登录" | "邮箱登录" | "扫码登录" | "验证码登录"
-  >("手机号登录");
+  const [mode, setMode] = useState<Mode>("手机号登录");
 
   const [form] = Form.useForm<{
     account: string;
@@ -45,8 +45,30 @@ function Header() {
     setUserInfo(res.data);
     setIsAnonimous(false);
     setLoginModal(false);
+    let store = await getStore();
+    if (info.remember) {
+      store.set("loginInfo", Object.assign(info, { type: mode }));
+    } else {
+      store.delete("loginInfo");
+    }
     Message.success("登录成功!");
   };
+
+  useAsyncEffect(async () => {
+    const store = await getStore();
+    const loginInfo = await store.get<{
+      account: string;
+      password: string;
+      remember: boolean;
+      type: Mode;
+    }>("loginInfo");
+
+    if (loginInfo) {
+      const { type, ...f } = loginInfo;
+      setMode(type);
+      form.setFieldsValue(f);
+    }
+  }, []);
 
   return (
     <div

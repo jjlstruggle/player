@@ -9,6 +9,7 @@ import Footer from "./layout/footer";
 const Index = lazy(() => import("@/pages/index"));
 const Playlist = lazy(() => import("@/pages/playlist/index"));
 const Square = lazy(() => import("@/pages/square/index"));
+const Music = lazy(() => import("@/pages/music/index"));
 
 function App() {
   const { path } = useRouterStore();
@@ -38,6 +39,9 @@ function App() {
               </Tabs.TabPane>
               <Tabs.TabPane key="/playlist" title="/" destroyOnHide>
                 <Playlist />
+              </Tabs.TabPane>
+              <Tabs.TabPane key="/music" title="/" destroyOnHide>
+                <Music />
               </Tabs.TabPane>
             </Tabs>
           </Suspense>

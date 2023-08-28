@@ -1,12 +1,33 @@
 import { useRouterStore } from "@/hooks/router";
 import { Menu, Space } from "@arco-design/web-react";
-import { IconApps, IconHome, IconSchedule } from "@arco-design/web-react/icon";
+import {
+  IconApps,
+  IconHome,
+  IconSchedule,
+  IconTiktokColor,
+} from "@arco-design/web-react/icon";
 import { useState } from "react";
 import { appWindow } from "@tauri-apps/api/window";
+import useUserStore from "@/store/user";
+import { useRequest } from "ahooks";
+import { getUserPlaylist } from "@/apis";
 
 function Sider() {
-  const { path, push } = useRouterStore();
+  const { path, push, params } = useRouterStore();
+  const { userInfo, isAnonimous } = useUserStore();
   const [isMaximize, setIsMaximize] = useState(false);
+
+  const { data, loading } = useRequest(
+    () => getUserPlaylist(userInfo?.account.id!),
+    {
+      ready: !isAnonimous,
+      refreshDeps: [isAnonimous],
+    }
+  );
+
+  const list = loading ? [] : data?.data.playlist!;
+
+  let selectKeys = path.startsWith("/playlist") ? path + "?" + params : path;
 
   return (
     <>
@@ -36,7 +57,17 @@ function Sider() {
           ></div>
         </Space>
       </div>
-      <Menu selectedKeys={[path]} onClickMenuItem={(key) => push(key)}>
+      <Menu
+        selectedKeys={[selectKeys]}
+        onClickMenuItem={(key) => {
+          if (key.startsWith("/playlist")) {
+            let split = key.split("?");
+            push(split[0], split[1]);
+          } else {
+            push(key);
+          }
+        }}
+      >
         <Menu.ItemGroup title="在线音乐">
           <Menu.Item key="/">
             <IconHome />
@@ -53,6 +84,14 @@ function Sider() {
             播放记录
           </Menu.Item>
         </Menu.ItemGroup>
+        <Menu.SubMenu key="my" title="我的歌单">
+          {list?.map((playlist) => (
+            <Menu.Item key={`/playlist?${playlist.id}`}>
+              <IconTiktokColor />
+              {playlist.name}
+            </Menu.Item>
+          ))}
+        </Menu.SubMenu>
       </Menu>
     </>
   );

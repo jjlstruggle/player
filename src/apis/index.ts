@@ -107,12 +107,22 @@ export const login = (
   }
 };
 
+export const getUserPlaylist = (uid: number) =>
+  client.get<{ playlist: Playlist[] }>("/user/playlist", { params: { uid } });
+
+export const getMusicLyric = (id: number) =>
+  client.get<{ lrc: { lyric: string }; klyric: { lyric: string } }>("/lyric", {
+    params: { id, noCookie: true },
+  });
+
 client.interceptors.request.use(function (config) {
   return new Promise((resolve) => {
     const { cookie, setCookie } = useUserStore.getState();
     if (cookie) {
       if (config.params) {
-        config.params["cookie"] = cookie;
+        if (!config.params.noCookie) {
+          config.params["cookie"] = cookie;
+        }
       } else {
         config.params = { cookie };
       }

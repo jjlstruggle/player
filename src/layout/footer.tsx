@@ -15,6 +15,7 @@ import {
 } from "@arco-design/web-react/icon";
 import { emit } from "@tauri-apps/api/event";
 import { WebviewWindow } from "@tauri-apps/api/window";
+import { useRouterStore } from "@/hooks/router";
 
 const formatTitle = (audio: HTMLAudioElement) => {
   return (
@@ -25,6 +26,7 @@ const formatTitle = (audio: HTMLAudioElement) => {
 };
 
 export default function Footer() {
+  const { push } = useRouterStore();
   const container = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
   const { audio, playIngMusic } = useMusicStore();
@@ -156,7 +158,14 @@ export default function Footer() {
       </div>
       <div className="flex items-center h-16 mb-1 px-4 justify-between">
         <div className="flex">
-          <div className="w-10 h-10 rounded overflow-hidden mr-2">
+          <div
+            className="w-10 h-10 rounded overflow-hidden mr-2 cursor-pointer"
+            onClick={() => {
+              if (playIngMusic) {
+                push("/music");
+              }
+            }}
+          >
             <img className="block w-full h-full" src={info.url} />
           </div>
           <div className="h-10">
