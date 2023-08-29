@@ -58,6 +58,7 @@ function Sider() {
         </Space>
       </div>
       <Menu
+        defaultOpenKeys={["my"]}
         selectedKeys={[selectKeys]}
         onClickMenuItem={(key) => {
           if (key.startsWith("/playlist")) {

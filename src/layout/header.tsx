@@ -46,6 +46,7 @@ function Header() {
     setIsAnonimous(false);
     setLoginModal(false);
     let store = await getStore();
+    await store.set("cookie", res.data.cookie);
     if (info.remember) {
       store.set("loginInfo", Object.assign(info, { type: mode }));
     } else {
@@ -56,6 +57,7 @@ function Header() {
 
   useAsyncEffect(async () => {
     const store = await getStore();
+
     const loginInfo = await store.get<{
       account: string;
       password: string;
@@ -69,6 +71,8 @@ function Header() {
       form.setFieldsValue(f);
     }
   }, []);
+
+  console.log(userInfo);
 
   return (
     <div

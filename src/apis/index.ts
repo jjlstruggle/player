@@ -43,10 +43,14 @@ export const getPrivatecontent = () =>
   );
 
 export const getPlaylist = (id: number) =>
-  client.get<{ playlist: Playlist }>("/playlist/detail", { params: { id } });
+  client.get<{ playlist: Playlist }>("/playlist/detail", {
+    params: { id, noCookie: true },
+  });
 
 export const getMusicInfo = (ids: string) =>
-  client.get<{ songs: Song[] }>("/song/detail", { params: { ids } });
+  client.get<{ songs: Song[] }>("/song/detail", {
+    params: { ids, noCookie: true },
+  });
 
 export const getMusicUrl = (id: number) =>
   client.get("/song/url", { params: { id } });
@@ -55,7 +59,7 @@ export const getCatlist = () =>
   client.get<{
     categories: Record<number, string>;
     sub: { name: string; category: number }[];
-  }>("/playlist/catlist");
+  }>("/playlist/catlist", { params: { noCookie: true } });
 
 export const getSquare = (cat: string, offset: number) =>
   client.get<{ total: number; playlists: Playlist[] }>("/top/playlist", {
@@ -63,6 +67,7 @@ export const getSquare = (cat: string, offset: number) =>
       cat,
       limit: 80,
       offset: offset * 80,
+      noCookie: true,
     },
   });
 
@@ -79,6 +84,7 @@ export const login = (
         params: {
           phone: account,
           password,
+          noCookie: true,
         },
       }
     );
@@ -90,6 +96,7 @@ export const login = (
         params: {
           phone: account,
           captcha: password,
+          noCookie: true,
         },
       }
     );
@@ -101,14 +108,19 @@ export const login = (
         params: {
           email: account,
           password,
+          noCookie: true,
         },
       }
     );
   }
 };
 
+export const loginStatus = () => client.get<{ data: User }>("/login/status");
+
 export const getUserPlaylist = (uid: number) =>
-  client.get<{ playlist: Playlist[] }>("/user/playlist", { params: { uid } });
+  client.get<{ playlist: Playlist[] }>("/user/playlist", {
+    params: { uid, noCookie: true },
+  });
 
 export const getMusicLyric = (id: number) =>
   client.get<{ lrc: { lyric: string }; klyric: { lyric: string } }>("/lyric", {
@@ -116,30 +128,13 @@ export const getMusicLyric = (id: number) =>
   });
 
 client.interceptors.request.use(function (config) {
-  return new Promise((resolve) => {
-    const { cookie, setCookie } = useUserStore.getState();
-    if (cookie) {
-      if (config.params) {
-        if (!config.params.noCookie) {
-          config.params["cookie"] = cookie;
-        }
-      } else {
-        config.params = { cookie };
-      }
-      resolve(config);
-    } else {
-      anonimousToken()
-        .then(({ data }) => {
-          setCookie(data.cookie);
-          if (config.params) {
-            config.params["cookie"] = cookie;
-          } else {
-            config.params = { cookie };
-          }
-        })
-        .finally(() => {
-          resolve(config);
-        });
+  const { cookie } = useUserStore.getState();
+  if (config.params) {
+    if (!config.params.noCookie) {
+      config.params["cookie"] = cookie;
     }
-  });
+  } else {
+    config.params = { cookie };
+  }
+  return config;
 });
