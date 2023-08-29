@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind utilities;
 
+body {
+  margin: 0;
+}
 @keyframes rotate {
   0% {
     transform: rotate(0);

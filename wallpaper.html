@@ -8,7 +8,7 @@
   </head>
 
   <body>
-    <div class="w-screen h-screen relative">
+    <div class="w-screen h-screen relative overflow-hidden">
       <img class="block w-screen h-screen blur-sm image-bg" />
       <div
         class="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
@@ -28,6 +28,10 @@
         <div class="font-bold text-xl mt-2 music-name"></div>
         <div class="text-base mt-2 artist"></div>
       </div>
+      <canvas
+        style="width: 100vw; height: 30vh"
+        class="absolute bottom-0"
+      ></canvas>
     </div>
     <script type="module" src="/src/wall/index.ts"></script>
   </body>
