@@ -13,6 +13,7 @@ fn main() {
             let window = app.get_window("main").unwrap();
             let wallpaper = app.get_window("wallpaper").unwrap();
             Wallpaper::attach(&wallpaper);
+            wallpaper.open_devtools();
             set_shadow(&window, true).expect("Unsupported platform!");
             Ok(())
         })

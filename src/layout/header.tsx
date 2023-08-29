@@ -72,8 +72,6 @@ function Header() {
     }
   }, []);
 
-  console.log(userInfo);
-
   return (
     <div
       data-tauri-drag-region

@@ -2,6 +2,7 @@ import { Song } from "@/interfaces/api";
 import { create } from "zustand";
 
 const audio = new Audio();
+audio.crossOrigin = "anonymous";
 
 const useMusicStore = create<{
   audio: HTMLAudioElement;

@@ -8,7 +8,27 @@
   </head>
 
   <body>
-    <div id="wall"></div>
-    <script type="module" src="/src/wall/index.tsx"></script>
+    <div class="w-screen h-screen relative">
+      <img class="block w-screen h-screen blur-sm image-bg" />
+      <div
+        class="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
+        style="
+          width: 300px;
+          height: 400px;
+          margin-left: -120px;
+          margin-top: -200px;
+          background-color: rgba(255, 255, 255, 0.25);
+          backdrop-filter: blur(6px);
+          border: 0.8px solid rgba(255, 255, 255, 0.18);
+          box-shadow: rgba(142, 142, 142, 0.19) 0px 6px 15px 0px;
+          border-radius: 12px;
+        "
+      >
+        <img class="block w-48 h-48 rounded-full image" />
+        <div class="font-bold text-xl mt-2 music-name"></div>
+        <div class="text-base mt-2 artist"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/wall/index.ts"></script>
   </body>
 </html>

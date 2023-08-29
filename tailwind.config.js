@@ -2,7 +2,7 @@ import colors from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{jsx,tsx}", "./wallpaper.html"],
   theme: {
     extend: {},
     colors: {

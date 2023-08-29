@@ -39,12 +39,26 @@ export default function Footer() {
     "play",
     async () => {
       setAudioState("play");
+      const ctx = new AudioContext();
+      const analyser = ctx.createAnalyser();
+      const source = ctx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(ctx.destination);
+      analyser.fftSize = 256;
+      const dataArray = new Uint8Array(analyser.fftSize);
+      function send() {
+        requestAnimationFrame(send);
+        analyser.getByteFrequencyData(dataArray);
+        emit("musicByte", dataArray);
+      }
+
       const mainWindow = WebviewWindow.getByLabel("wallpaper")!;
       const isShow = await mainWindow.isVisible();
       if (!isShow) {
         await mainWindow.show();
       }
-      emit("play", playIngMusic);
+      await emit("play", playIngMusic);
+      send();
     },
     { target: audio }
   );
@@ -127,7 +141,7 @@ export default function Footer() {
       };
 
   return (
-    <div>
+    <div className="relative">
       <div
         ref={container}
         className="progress h-1 mt-2 bg-[var(--color-fill-2)] relative mr-4"
