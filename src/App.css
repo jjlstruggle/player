@@ -24,3 +24,7 @@
 .revolve {
   animation: rotate linear 20s;
 }
+
+.arco-input-group-suffix {
+  cursor: pointer;
+}
