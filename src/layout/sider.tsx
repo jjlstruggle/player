@@ -6,11 +6,12 @@ import {
   IconSchedule,
   IconTiktokColor,
 } from "@arco-design/web-react/icon";
-import { useState } from "react";
-import { appWindow } from "@tauri-apps/api/window";
+import { useEffect, useState } from "react";
+import { WebviewWindow, appWindow, getAll } from "@tauri-apps/api/window";
 import useUserStore from "@/store/user";
 import { useRequest } from "ahooks";
 import { getUserPlaylist } from "@/apis";
+import { invoke } from "@tauri-apps/api";
 
 function Sider() {
   const { path, push, params } = useRouterStore();
@@ -29,6 +30,13 @@ function Sider() {
 
   let selectKeys = path.startsWith("/playlist") ? path + "?" + params : path;
 
+  useEffect(() => {
+    appWindow.onCloseRequested(async () => {
+      await invoke("detach");
+      await WebviewWindow.getByLabel("wallpaper")!.close();
+    });
+  }, []);
+
   return (
     <>
       <div
@@ -38,7 +46,7 @@ function Sider() {
         <Space size="medium">
           <div
             className="w-4 h-4 rounded-full cursor-pointer bg-[#fd6458]"
-            onClick={() => {
+            onClick={async () => {
               appWindow.close();
             }}
           ></div>

@@ -24,9 +24,7 @@
       "shell": {
         "all": false,
         "execute": true,
-        "open": false,
-        "scope": [],
-        "sidecar": false
+        "scope": []
       },
       "window": {
         "close": true,
@@ -67,7 +65,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": ["./server/app.exe"],
       "shortDescription": "",
       "targets": "all",
       "windows": {

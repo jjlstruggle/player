@@ -6,7 +6,7 @@ import useUserStore from "./store/user";
 import { getStore } from "./utils/store";
 import { anonimousToken, loginStatus } from "./apis";
 
-(async function init() {
+async function init() {
   const store = await getStore();
   const cookie = await store.get<string>("cookie");
   if (cookie) {
@@ -23,4 +23,6 @@ import { anonimousToken, loginStatus } from "./apis";
       <App />
     </>
   );
-})();
+}
+
+init();

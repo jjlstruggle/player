@@ -10,6 +10,7 @@ import {
   Playlist,
   Song,
   User,
+  Suggest,
 } from "@/interfaces/api";
 
 const client = axios.create({
@@ -125,6 +126,12 @@ export const getUserPlaylist = (uid: number) =>
 export const getMusicLyric = (id: number) =>
   client.get<{ lrc: { lyric: string }; klyric: { lyric: string } }>("/lyric", {
     params: { id, noCookie: true },
+  });
+export const searchSuggest = (key: string) =>
+  client.get<{
+    result: Suggest;
+  }>("/search/suggest", {
+    params: { keywords: key, noCookie: true },
   });
 
 client.interceptors.request.use(function (config) {

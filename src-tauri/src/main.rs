@@ -5,6 +5,17 @@ use tauri_plugin_store;
 use tauri_plugin_wallpaper::Wallpaper;
 use window_shadows::set_shadow;
 
+#[tauri::command]
+fn detach(app: tauri::AppHandle) {
+    let wallpaper = app.get_window("wallpaper").unwrap();
+    Wallpaper::detach(&wallpaper);
+}
+#[tauri::command]
+fn attach(app: tauri::AppHandle) {
+    let wallpaper = app.get_window("wallpaper").unwrap();
+    Wallpaper::attach(&wallpaper);
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(Wallpaper::init())
@@ -13,10 +24,10 @@ fn main() {
             let window = app.get_window("main").unwrap();
             let wallpaper = app.get_window("wallpaper").unwrap();
             Wallpaper::attach(&wallpaper);
-            wallpaper.open_devtools();
             set_shadow(&window, true).expect("Unsupported platform!");
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![detach, attach])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

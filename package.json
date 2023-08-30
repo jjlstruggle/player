@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tauri dev",
-    "build": "tsc && vite build",
+    "build": "pnpm run build:server && tsc && vite build",
     "build:app": "tauri build",
-    "build:server": "pkg ./server -t node18-win-x64 -C GZip -o bin/app --no-bytecode",
+    "build:server": "pkg ./server -t node18-win-x64 -C GZip -o src-tauri/server/app --no-bytecode",
     "dev:app": "concurrently \"node ./server/app.js\" \"vite\""
   },
   "dependencies": {

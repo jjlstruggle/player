@@ -1,27 +1,41 @@
-import { login } from "@/apis";
+import { login, searchSuggest } from "@/apis";
+import { Suggest } from "@/interfaces/api";
 import useUserStore from "@/store/user";
 import { getStore } from "@/utils/store";
 import {
   Button,
   Checkbox,
   Divider,
+  Dropdown,
   Form,
   Grid,
   Input,
   Link,
+  Menu,
   Message,
   Modal,
   Space,
 } from "@arco-design/web-react";
 import { IconUser } from "@arco-design/web-react/icon";
 import { useAsyncEffect } from "ahooks";
-import { useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
+
 type Mode = "手机号登录" | "邮箱登录" | "扫码登录" | "验证码登录";
+enum DATA {
+  "playlists" = "歌单",
+  "artists" = "歌手",
+  "songs" = "单曲",
+  "albums" = "专辑",
+}
+
 function Header() {
   const { isAnonimous, setCookie, setUserInfo, setIsAnonimous, userInfo } =
     useUserStore();
   const [loginModal, setLoginModal] = useState(false);
   const [mode, setMode] = useState<Mode>("手机号登录");
+  const [searchText, setSearchText] = useState("");
+  const [list, setList] = useState<Suggest>();
+  const searchVal = useDeferredValue(searchText);
 
   const [form] = Form.useForm<{
     account: string;
@@ -41,6 +55,7 @@ function Header() {
         ? "captcha"
         : "email"
     );
+
     setCookie(res.data.cookie);
     setUserInfo(res.data);
     setIsAnonimous(false);
@@ -71,6 +86,30 @@ function Header() {
       form.setFieldsValue(f);
     }
   }, []);
+
+  useEffect(() => {
+    if (searchVal) {
+      searchSuggest(searchVal).then(({ data }) => {
+        setList(data.result);
+      });
+    }
+  }, [searchVal]);
+
+  const droplist = list ? (
+    <Menu>
+      {list.order.map((key) => {
+        const data = list[key];
+        const title = DATA[key];
+        return (
+          <Menu.ItemGroup title={title}>
+            {data.map((info) => (
+              <Menu.Item key={String(info.id)}>{info.name}</Menu.Item>
+            ))}
+          </Menu.ItemGroup>
+        );
+      })}
+    </Menu>
+  ) : null;
 
   return (
     <div
@@ -228,7 +267,14 @@ function Header() {
           )}
         </Form>
       </Modal>
-      <Input.Search className="w-64" />
+      <Dropdown trigger="click" droplist={droplist}>
+        <Input.Search
+          allowClear
+          className="w-64"
+          value={searchText}
+          onChange={(val) => setSearchText(val)}
+        />
+      </Dropdown>
       <div className="ml-12 flex items-center">
         {isAnonimous ? (
           <>

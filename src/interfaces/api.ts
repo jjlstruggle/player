@@ -94,3 +94,15 @@ export interface User {
   };
   account: { id: number; userName: string };
 }
+
+export interface Suggest {
+  order: ["albums", "artists", "songs", "playlists"];
+  albums: {
+    artits: { name: string; picUrl: string; id: number };
+    name: string;
+    id: number;
+  }[];
+  artists: { name: string; picUrl: string; id: number }[];
+  songs: Song[];
+  playlists: Playlist[];
+}
