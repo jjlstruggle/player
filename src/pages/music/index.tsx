@@ -154,7 +154,11 @@ export default function Music() {
                 marginTop: -105,
               }}
               src={playIngMusic?.al.picUrl}
-              className="absolute z-0 top-1/2 left-1/2 block"
+              className={classNames(
+                play
+                  ? "absolute z-0 top-1/2 left-1/2 block revolve"
+                  : "absolute z-0 top-1/2 left-1/2 block"
+              )}
             />
           </div>
         </div>

@@ -8,7 +8,7 @@ let appDir = "",
 export async function getStore() {
   if (!appDir || !storeDir || !store) {
     appDir = await resourceDir();
-    storeDir = await join(appDir, "data");
+    storeDir = await join(appDir, "data", "runtime.dat");
     store = new Store(storeDir);
   }
   return store;

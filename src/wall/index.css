@@ -14,5 +14,5 @@ body {
 }
 
 .revolve {
-  animation: rotate linear 20s;
+  animation: rotate linear 20s infinite;
 }

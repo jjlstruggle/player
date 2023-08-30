@@ -1,6 +1,6 @@
 import useMusicStore from "@/store/music";
 import { parseTimeToString } from "@/utils";
-import { Slider, Tooltip } from "@arco-design/web-react";
+import { Drawer, Slider, Tooltip } from "@arco-design/web-react";
 import { useEventListener, useMouse } from "ahooks";
 import { useRef, useState } from "react";
 import noMusic from "@/assets/no-music.png";
@@ -16,6 +16,7 @@ import {
 import { emit } from "@tauri-apps/api/event";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { useRouterStore } from "@/hooks/router";
+import IDrawer from "@/components/layout/drawer";
 
 const formatTitle = (audio: HTMLAudioElement) => {
   return (
@@ -34,6 +35,7 @@ export default function Footer() {
   const [audioState, setAudioState] = useState<"pause" | "play">("pause");
   const [audioProgress, setAudioProgress] = useState("0%");
   const [isMove, setIsMove] = useState(false);
+  const [showDraw, setShowDraw] = useState(false);
 
   useEventListener(
     "play",
@@ -142,6 +144,15 @@ export default function Footer() {
 
   return (
     <div className="relative">
+      <Drawer
+        width="50vw"
+        unmountOnExit
+        footer={null}
+        onCancel={() => setShowDraw(false)}
+        visible={showDraw}
+      >
+        <IDrawer />
+      </Drawer>
       <div
         ref={container}
         className="progress h-1 mt-2 bg-[var(--color-fill-2)] relative mr-4"
@@ -227,7 +238,10 @@ export default function Footer() {
             <div className="text-xs select-none">
               {info.duration}/{info.time}
             </div>
-            <IconMenu className="mr-6 ml-3 cursor-pointer text-xl" />
+            <IconMenu
+              onClick={() => setShowDraw(true)}
+              className="mr-6 ml-3 cursor-pointer text-xl"
+            />
           </div>
         </div>
       </div>
