@@ -6,16 +6,21 @@ import {
   IconSchedule,
   IconTiktokColor,
 } from "@arco-design/web-react/icon";
-import { useEffect, useState } from "react";
-import { WebviewWindow, appWindow, getAll } from "@tauri-apps/api/window";
+import { useState } from "react";
+import { WebviewWindow, appWindow } from "@tauri-apps/api/window";
 import useUserStore from "@/store/user";
-import { useRequest } from "ahooks";
+import { useAsyncEffect, useRequest } from "ahooks";
 import { getUserPlaylist } from "@/apis";
 import { invoke } from "@tauri-apps/api";
+import { getStore } from "@/utils/store";
+import useCacheStore from "@/store/cache";
+import { isNull } from "lodash-es";
+import { Song } from "@/interfaces/api";
 
 function Sider() {
   const { path, push, params } = useRouterStore();
   const { userInfo, isAnonimous } = useUserStore();
+  const { initHistory } = useCacheStore();
   const [isMaximize, setIsMaximize] = useState(false);
 
   const { data, loading } = useRequest(
@@ -30,11 +35,22 @@ function Sider() {
 
   let selectKeys = path.startsWith("/playlist") ? path + "?" + params : path;
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
+    let store = await getStore();
     appWindow.onCloseRequested(async () => {
       await invoke("detach");
+      let history = useCacheStore.getState().historyList;
+      await store.set("music-history", history);
+      await store.save();
       await WebviewWindow.getByLabel("wallpaper")!.close();
     });
+    const history = await store.get<Song[]>("music-history");
+    if (isNull(history)) {
+      store.set("music-history", []);
+      initHistory([]);
+    } else {
+      initHistory(history);
+    }
   }, []);
 
   return (

@@ -11,6 +11,7 @@ const Playlist = lazy(() => import("@/pages/playlist/index"));
 const Square = lazy(() => import("@/pages/square/index"));
 const Music = lazy(() => import("@/pages/music/index"));
 const Search = lazy(() => import("@/pages/search/index"));
+const History = lazy(() => import("@/pages/history/index"));
 
 function App() {
   const { path } = useRouterStore();
@@ -38,14 +39,17 @@ function App() {
               <Tabs.TabPane key="/square" title="/">
                 <Square />
               </Tabs.TabPane>
-              <Tabs.TabPane key="/playlist" title="/" destroyOnHide>
-                <Playlist />
-              </Tabs.TabPane>
               <Tabs.TabPane key="/search" title="/">
                 <Search />
               </Tabs.TabPane>
+              <Tabs.TabPane key="/history" title="/">
+                <History />
+              </Tabs.TabPane>
               <Tabs.TabPane key="/music" title="/" destroyOnHide>
                 <Music />
+              </Tabs.TabPane>
+              <Tabs.TabPane key="/playlist" title="/" destroyOnHide>
+                <Playlist />
               </Tabs.TabPane>
             </Tabs>
           </Suspense>

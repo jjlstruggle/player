@@ -13,10 +13,11 @@ import {
   Suggest,
 } from "@/interfaces/api";
 
+axios.defaults.adapter = axiosTauriApiAdapter;
+axios.defaults.withCredentials = true;
+
 const client = axios.create({
-  adapter: axiosTauriApiAdapter,
   baseURL: "http://localhost:3000",
-  withCredentials: true,
 });
 
 export const anonimousToken = () =>

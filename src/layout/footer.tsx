@@ -4,7 +4,7 @@ import { Drawer, Slider, Tooltip } from "@arco-design/web-react";
 import { useEventListener, useMouse } from "ahooks";
 import { useRef, useState } from "react";
 import noMusic from "@/assets/no-music.png";
-import { isUndefined } from "lodash-es";
+import { isUndefined, pick } from "lodash-es";
 import {
   IconBackward,
   IconForward,
@@ -17,6 +17,8 @@ import { emit } from "@tauri-apps/api/event";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { useRouterStore } from "@/hooks/router";
 import IDrawer from "@/components/layout/drawer";
+import useCacheStore from "@/store/cache";
+import { Song } from "@/interfaces/api";
 
 const formatTitle = (audio: HTMLAudioElement) => {
   return (
@@ -28,6 +30,7 @@ const formatTitle = (audio: HTMLAudioElement) => {
 
 export default function Footer() {
   const { push } = useRouterStore();
+  const { pushMusic, levelMusic } = useCacheStore();
   const container = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
   const { audio, playIngMusic } = useMusicStore();
@@ -40,6 +43,23 @@ export default function Footer() {
   useEventListener(
     "play",
     async () => {
+      let playMusic = useMusicStore.getState().playIngMusic!;
+      let curHistory = useCacheStore.getState().historyList;
+      let index = curHistory.findIndex((item) => item.id == playMusic.id);
+
+      if (index == -1) {
+        const cacheMusicInfo = pick(playMusic, [
+          "name",
+          "al",
+          "dt",
+          "ar",
+          "id",
+        ]);
+        pushMusic(cacheMusicInfo as Song);
+      } else {
+        levelMusic(index);
+      }
+
       setAudioState("play");
       const ctx = new AudioContext();
       const analyser = ctx.createAnalyser();
@@ -59,7 +79,7 @@ export default function Footer() {
       if (!isShow) {
         await mainWindow.show();
       }
-      await emit("play", playIngMusic);
+      await emit("play", playMusic);
       send();
     },
     { target: audio }

@@ -27,7 +27,7 @@
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
     "@types/lodash-es": "^4.17.8",
-    "@types/node": "^18.17.11",
+    "@types/node": "^18.17.12",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/shelljs": "^0.8.12",
@@ -35,11 +35,10 @@
     "autoprefixer": "^10.4.15",
     "concurrently": "^8.2.1",
     "less": "^4.2.0",
-    "postcss": "^8.4.28",
+    "postcss": "^8.4.29",
     "shelljs": "^0.8.5",
     "tailwindcss": "^3.3.3",
     "typescript": "^4.9.5",
-    "vite": "^4.4.9",
-    "vite-plugin-svgr": "^3.2.0"
+    "vite": "^4.4.9"
   }
 }
