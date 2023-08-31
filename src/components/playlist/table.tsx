@@ -2,8 +2,10 @@ import {
   Dropdown,
   Menu,
   Message,
+  Space,
   Table,
   TableColumnProps,
+  Tag,
 } from "@arco-design/web-react";
 import { useMemo, useRef, useState } from "react";
 import { IconHeart, IconHeartFill } from "@arco-design/web-react/icon";
@@ -13,9 +15,12 @@ import { parseIndex, parseTimeToString } from "@/utils";
 import { getMusicInfo, getMusicUrl, like } from "@/apis";
 import useMusicStore from "@/store/music";
 import useUserStore from "@/store/user";
+import { download } from "tauri-plugin-upload-api";
+import { getDownloadPath } from "@/utils/path";
 
 function PlaylistTable({ playlist }: { playlist: Playlist }) {
   const { listlist, setLikelist } = useUserStore();
+  const { userInfo, isAnonimous } = useUserStore();
   const [expand, setExpand] = useState(false);
   const selectMusic = useRef<Song>();
 
@@ -65,6 +70,25 @@ function PlaylistTable({ playlist }: { playlist: Playlist }) {
       title: "曲名",
       dataIndex: "name",
       ellipsis: true,
+      render(col, origin: Song) {
+        if (origin.fee !== 0 && origin.fee !== 8) {
+          return (
+            <Space>
+              {col}
+              <Tag size="small" color="red" bordered>
+                Vip
+              </Tag>
+              {isAnonimous || !userInfo?.account.vipType ? (
+                <Tag size="small" color="red" bordered>
+                  试听
+                </Tag>
+              ) : null}
+            </Space>
+          );
+        } else {
+          return col;
+        }
+      },
     },
     {
       title: "歌手",
@@ -101,9 +125,18 @@ function PlaylistTable({ playlist }: { playlist: Playlist }) {
   const droplist = expand ? (
     <Menu
       // @ts-ignore
-      onClickMenuItem={(key: "play" | "download") => {
+      onClickMenuItem={async (key: "play" | "download") => {
         if (key === "download") {
-          console.log(selectMusic);
+          let res = await getMusicUrl(selectMusic.current!.id);
+          let downloadDir = await getDownloadPath();
+          let url = res.data.data[0].url as string;
+          let extension = url.split(".").at(-1);
+          let name = selectMusic.current!.name;
+          let downloadPath = `${downloadDir}\\${name}.${extension}`;
+
+          // download(url, downloadPath, (progress, total) =>
+          //   console.log(`Downloaded ${progress} of ${total} bytes`)
+          // );
         }
       }}
     >

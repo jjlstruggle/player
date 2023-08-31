@@ -2,6 +2,7 @@
 
 use tauri::Manager;
 use tauri_plugin_store;
+use tauri_plugin_upload;
 use tauri_plugin_wallpaper::Wallpaper;
 use window_shadows::set_shadow;
 
@@ -18,6 +19,7 @@ fn attach(app: tauri::AppHandle) {
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_upload::init())
         .plugin(Wallpaper::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .setup(|app| {

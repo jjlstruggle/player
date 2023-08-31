@@ -2,6 +2,7 @@ import { useRouterStore } from "@/hooks/router";
 import { Menu, Space } from "@arco-design/web-react";
 import {
   IconApps,
+  IconDownload,
   IconHome,
   IconSchedule,
   IconTiktokColor,
@@ -107,6 +108,10 @@ function Sider() {
           <Menu.Item key="/history">
             <IconSchedule />
             播放记录
+          </Menu.Item>
+          <Menu.Item key="/download">
+            <IconDownload />
+            本地下载
           </Menu.Item>
         </Menu.ItemGroup>
         <Menu.SubMenu key="my" title="我的歌单">

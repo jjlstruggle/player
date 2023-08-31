@@ -38,6 +38,9 @@ dependencies:
   tauri-plugin-store-api:
     specifier: github:tauri-apps/tauri-plugin-store#v1
     version: github.com/tauri-apps/tauri-plugin-store/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa
+  tauri-plugin-upload-api:
+    specifier: github:tauri-apps/tauri-plugin-upload#v1
+    version: github.com/tauri-apps/tauri-plugin-upload/b53ebc6c2e716d95fd94b64d3b4b87cd57ae4feb
   zustand:
     specifier: ^4.4.1
     version: 4.4.1(@types/react@18.2.21)(react@18.2.0)
@@ -2063,6 +2066,14 @@ packages:
   github.com/tauri-apps/tauri-plugin-store/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa:
     resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa}
     name: tauri-plugin-store-api
+    version: 0.0.0
+    dependencies:
+      '@tauri-apps/api': 1.4.0
+    dev: false
+
+  github.com/tauri-apps/tauri-plugin-upload/b53ebc6c2e716d95fd94b64d3b4b87cd57ae4feb:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-upload/tar.gz/b53ebc6c2e716d95fd94b64d3b4b87cd57ae4feb}
+    name: tauri-plugin-upload-api
     version: 0.0.0
     dependencies:
       '@tauri-apps/api': 1.4.0

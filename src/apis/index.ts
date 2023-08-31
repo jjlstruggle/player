@@ -147,6 +147,11 @@ export const like = (id: number, like = true) =>
     params: { id, like },
   });
 
+export const getDownloadUrl = (id: number) =>
+  client.get("/song/download/url", {
+    params: { id },
+  });
+
 client.interceptors.request.use(function (config) {
   const { cookie } = useUserStore.getState();
   if (config.params) {

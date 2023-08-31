@@ -83,6 +83,7 @@ export interface Song {
   m?: Quqlity;
   sq?: Quqlity;
   tns: string[];
+  fee: 0 | 1 | 4 | 8;
 }
 
 export interface User {
@@ -92,7 +93,7 @@ export interface User {
     avatarUrl: string;
     nickname: string;
   };
-  account: { id: number; userName: string };
+  account: { id: number; userName: string; vipType: number };
 }
 
 export interface Suggest {
