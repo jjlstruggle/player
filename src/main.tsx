@@ -4,7 +4,7 @@ import App from "./App";
 import "./styles.css";
 import useUserStore from "./store/user";
 import { getStore } from "./utils/store";
-import { anonimousToken, loginStatus } from "./apis";
+import { anonimousToken, getLikelist, loginStatus } from "./apis";
 
 async function init() {
   const store = await getStore();
@@ -12,7 +12,8 @@ async function init() {
   if (cookie) {
     useUserStore.setState({ cookie, isAnonimous: false });
     const { data } = await loginStatus();
-    useUserStore.setState({ userInfo: data.data });
+    const res = await getLikelist(data.data.account.id);
+    useUserStore.setState({ userInfo: data.data, listlist: res.data.ids });
   } else {
     const token = await anonimousToken();
     const cookie = token.data.cookie;

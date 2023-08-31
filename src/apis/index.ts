@@ -135,6 +135,18 @@ export const searchSuggest = (key: string) =>
     params: { keywords: key, noCookie: true },
   });
 
+export const getLikelist = (uid: number) =>
+  client.get<{ ids: number[] }>("/likelist", {
+    params: {
+      uid,
+    },
+  });
+
+export const like = (id: number, like = true) =>
+  client.get("/like", {
+    params: { id, like },
+  });
+
 client.interceptors.request.use(function (config) {
   const { cookie } = useUserStore.getState();
   if (config.params) {
