@@ -54,6 +54,7 @@ export default function Footer() {
           "dt",
           "ar",
           "id",
+          "fee",
         ]);
         pushMusic(cacheMusicInfo as Song);
       } else {

@@ -8,19 +8,23 @@ import {
   Tag,
 } from "@arco-design/web-react";
 import { useMemo, useRef, useState } from "react";
-import { IconHeart, IconHeartFill } from "@arco-design/web-react/icon";
+import {
+  IconDownload,
+  IconHeart,
+  IconHeartFill,
+} from "@arco-design/web-react/icon";
 import { useRequest } from "ahooks";
 import { Playlist, Song } from "@/interfaces/api";
 import { parseIndex, parseTimeToString } from "@/utils";
 import { getMusicInfo, getMusicUrl, like } from "@/apis";
 import useMusicStore from "@/store/music";
 import useUserStore from "@/store/user";
-import { download } from "tauri-plugin-upload-api";
 import { getDownloadPath } from "@/utils/path";
+import useDownloadStore from "@/store/downloadList";
 
 function PlaylistTable({ playlist }: { playlist: Playlist }) {
-  const { listlist, setLikelist } = useUserStore();
-  const { userInfo, isAnonimous } = useUserStore();
+  const { tasklist, addTask } = useDownloadStore();
+  const { userInfo, isAnonimous, listlist, setLikelist } = useUserStore();
   const [expand, setExpand] = useState(false);
   const selectMusic = useRef<Song>();
 
@@ -122,26 +126,56 @@ function PlaylistTable({ playlist }: { playlist: Playlist }) {
   const { loading, data } = useRequest(() => getMusicInfo(ids));
   const music = loading ? [] : data?.data.songs!;
 
+  let map = useMemo(() => {
+    let map = new Map();
+    music.forEach((item) => {
+      map.set(item.id, item);
+    });
+    return map;
+  }, [music.length]);
+
   const droplist = expand ? (
     <Menu
       // @ts-ignore
-      onClickMenuItem={async (key: "play" | "download") => {
+      onClickMenuItem={async (key: "play" | "download" | "downloadAll") => {
         if (key === "download") {
-          let res = await getMusicUrl(selectMusic.current!.id);
+          if (
+            tasklist.findIndex((item) => item.id == selectMusic.current!.id) ==
+            -1
+          ) {
+            let res = await getMusicUrl(selectMusic.current!.id);
+            let downloadDir = await getDownloadPath();
+            let url = res.data.data[0].url;
+            let name = selectMusic.current!.name;
+            let downloadPath = `${downloadDir}\\${name}.${res.data.data[0].type}`;
+            addTask(
+              selectMusic.current!.id,
+              url,
+              downloadPath,
+              selectMusic.current!
+            );
+            Message.success("添加下载任务成功!");
+          } else {
+            Message.warning("已有该下载任务");
+          }
+        } else if (key === "downloadAll") {
           let downloadDir = await getDownloadPath();
-          let url = res.data.data[0].url as string;
-          let extension = url.split(".").at(-1);
-          let name = selectMusic.current!.name;
-          let downloadPath = `${downloadDir}\\${name}.${extension}`;
-
-          // download(url, downloadPath, (progress, total) =>
-          //   console.log(`Downloaded ${progress} of ${total} bytes`)
-          // );
+          // @ts-ignore
+          let urls = await getMusicUrl(ids);
+          urls.data.data.forEach((item) => {
+            let originInfo = map.get(item.id);
+            let downloadPath = `${downloadDir}\\${originInfo.name}.${item.type}`;
+            addTask(item.id, item.url, downloadPath, originInfo);
+          });
         }
       }}
     >
       <Menu.Item key="play">立即播放</Menu.Item>
       <Menu.Item key="download">下载单曲</Menu.Item>
+      <Menu.Item key="downloadAll">
+        <IconDownload />
+        下载全部
+      </Menu.Item>
     </Menu>
   ) : null;
 

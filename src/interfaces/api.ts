@@ -107,3 +107,9 @@ export interface Suggest {
   songs: Song[];
   playlists: Playlist[];
 }
+
+export interface Download {
+  url: string;
+  type: string;
+  id: number;
+}

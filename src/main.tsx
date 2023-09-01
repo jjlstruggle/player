@@ -5,6 +5,11 @@ import "./styles.css";
 import useUserStore from "./store/user";
 import { getStore } from "./utils/store";
 import { anonimousToken, getLikelist, loginStatus } from "./apis";
+import related from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+dayjs.extend(related);
+dayjs.locale("zh-cn");
 
 async function init() {
   const store = await getStore();

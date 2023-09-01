@@ -11,6 +11,7 @@ import {
   Song,
   User,
   Suggest,
+  Download,
 } from "@/interfaces/api";
 
 axios.defaults.adapter = axiosTauriApiAdapter;
@@ -55,7 +56,9 @@ export const getMusicInfo = (ids: string) =>
   });
 
 export const getMusicUrl = (id: number) =>
-  client.get("/song/url", { params: { id } });
+  client.get<{
+    data: Download[];
+  }>("/song/url", { params: { id } });
 
 export const getCatlist = () =>
   client.get<{
@@ -148,7 +151,9 @@ export const like = (id: number, like = true) =>
   });
 
 export const getDownloadUrl = (id: number) =>
-  client.get("/song/download/url", {
+  client.get<{
+    data: Download[];
+  }>("/song/download/url", {
     params: { id },
   });
 

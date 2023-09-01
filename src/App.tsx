@@ -46,7 +46,7 @@ function App() {
               <Tabs.TabPane key="/history" title="/">
                 <History />
               </Tabs.TabPane>
-              <Tabs.TabPane key="/download" title="/">
+              <Tabs.TabPane key="/download" title="/" lazyload={false}>
                 <Download />
               </Tabs.TabPane>
               <Tabs.TabPane key="/music" title="/" destroyOnHide>
