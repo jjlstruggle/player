@@ -162,6 +162,7 @@ function PlaylistTable({ playlist }: { playlist: Playlist }) {
           let downloadDir = await getDownloadPath();
           // @ts-ignore
           let urls = await getMusicUrl(ids);
+          Message.success("添加下载任务成功!");
           urls.data.data.forEach((item) => {
             let originInfo = map.get(item.id);
             let downloadPath = `${downloadDir}\\${originInfo.name}.${item.type}`;

@@ -1,11 +1,2 @@
 @tailwind base;
 @tailwind utilities;
-
-@font-face {
-  font-family: en;
-  src: url("/jetbrain.ttf");
-}
-
-.en {
-  font-family: en;
-}

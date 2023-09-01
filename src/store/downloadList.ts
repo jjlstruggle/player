@@ -65,7 +65,10 @@ function run(origin: string, target: string) {
       item.state = "success";
       item.downloadTime = dayjs().unix();
       useDownloadStore.setState({ tasklist: tasklist.slice(0) });
-      Message.success("下载成功");
+      Message.success({
+        id: "download",
+        content: `${item.originSong.name}下载成功`,
+      });
     })
     .finally(() => {
       index++;

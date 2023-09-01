@@ -8,8 +8,15 @@ import { anonimousToken, getLikelist, loginStatus } from "./apis";
 import related from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
+import { Command } from "@tauri-apps/api/shell";
+
 dayjs.extend(related);
 dayjs.locale("zh-cn");
+Command.sidecar("server/appServer")
+  .spawn()
+  .then((res) => {
+    init();
+  });
 
 async function init() {
   const store = await getStore();
@@ -30,5 +37,3 @@ async function init() {
     </>
   );
 }
-
-init();
