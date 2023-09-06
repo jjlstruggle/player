@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tauri dev",
-    "build": "tsc && vite build",
-    "build:app": "tauri build",
+    "build:app": "tsc && vite build",
+    "build": "tauri build",
     "dev:app": " vite"
   },
   "dependencies": {
