@@ -30,8 +30,14 @@ jobs:
       - name: Sync node version and setup cache
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/*"
+          node-version: "18"
           cache: "pnpm"
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
 
       - name: Install frontend dependencies
         run: pnpm install
