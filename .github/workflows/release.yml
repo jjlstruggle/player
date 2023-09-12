@@ -36,18 +36,9 @@ jobs:
         name: Install pnpm
         with:
           version: 8
-          run_install: false
-
-      - name: Install frontend dependencies
-        run: pnpm install
+          run_install: true
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: "v0.0.1"
-          releaseName: "v0.0.1"
-          releaseBody: "See the assets to download and install this version."
-          releaseDraft: true
-          prerelease: false
